@@ -1,0 +1,22 @@
+name: actionstate
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.8
+  - pytorch>=1.10        # will pull in cudatoolkit if you have GPU
+  - torchvision>=0.11
+  - transformers>=4.0
+  - numpy>=1.19
+  - tqdm>=4.50
+  - pillow>=8.0
+  - opencv>=4.5
+  - requests>=2.25
+  - wget                 # from conda-forge
+  - filelock>=3.0
+  - pyyaml>=5.3
+
+# conda env create -f environment.yml
+# conda activate actionstate
