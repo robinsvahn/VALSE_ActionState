@@ -1,0 +1,24 @@
+name: actionstage
+channels:
+    - conda-forge
+    - defaults
+
+dependencies:
+    - python=3.10 # Updated to Python 3.10 (more modern)
+    # - pytorch  # Commented out to avoid the large installation
+    # - torchvision  # Commented out for now
+    - numpy
+    - tqdm
+    - pillow
+    - opencv
+    - requests
+    - filelock
+    - pyyaml
+    # - transformers  # Commented out to avoid the large installation
+    # - cudatoolkit  # Only needed if we're using GPU support (we can install it later if required)
+# Windows terminal commands to run project
+# conda env create -f environment_minimal.yaml
+# conda activate actionstage
+# pip install torch torchvision torchaudio
+# pip install transformers
+# pip install wget
