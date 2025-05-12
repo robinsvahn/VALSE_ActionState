@@ -1,8 +1,8 @@
 DATA = {
     # "plurals-mini": ["data/plurals/test_images/",
     #        'data/plurals-mini.json'],
-    # "temporal_stage" : ["data/temporal-stage/frames/"/,
-    #    'data/temporal_stage.json']
+    "temporal_stage" : ["data/temporal-stage/frames/",
+       'data/temporal_stage.json']
     # "existence": ["data/visual7w/images/",
     #               'data/existence.json'],
     # "plurals": ["data/plurals/test_images/",

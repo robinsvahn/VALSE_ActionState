@@ -31,7 +31,7 @@ for instrument, foil_info in DATA.items():
     for foil_id, foil in tqdm(foils_data.items()):
         caption_fits = foil['mturk']['caption']
 
-        if caption_fits >= 2:  # valid examples only (validated by mturkers)
+        if caption_fits >= 0:  # valid examples only (validated by mturkers)
 
             test_img_path = os.path.join(images_path, foil["image_file"])
             test_sentences = [foil["caption"], foil["foil"]]
