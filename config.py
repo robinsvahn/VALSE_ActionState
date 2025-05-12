@@ -1,8 +1,10 @@
 DATA = {
+    "plurals-mini": ["data/plurals/test_images/",
+            'data/plurals-mini.json'],
     # "existence": ["data/visual7w/images/",
     #               'data/existence.json'],
-    "plurals": ["data/plurals/test_images/",
-                'data/plurals.json'],
+    # "plurals": ["data/plurals/test_images/",
+    #             'data/plurals.json'],
     # "counting_hard": ["data/visual7w/images/",
     #                   'data/counting_hard.json'],
     # "counting_small": ['data/visual7w/images/',
