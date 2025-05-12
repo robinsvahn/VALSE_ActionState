@@ -1,0 +1,6 @@
+100%|██████████████████████████████████████████████████████████████████████████████████████| 150/150 [23:03<00:00,  9.22s/it]
+temporal_stage_small sample 150/150.
+    FOIL det accuracy (acc): 49.67,
+    Caption fits p_c: 52.67,
+    FOIL detected p_f: 46.67,
+    Pairwise accuracy acc_r: 53.33
