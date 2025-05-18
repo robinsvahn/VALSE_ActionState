@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>VALSE Caption Rating Tool</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                line-height: 1.6;
+            }
+            h1 {
+                color: #2c3e50;
+                text-align: center;
+            }
+            .intro {
+                background-color: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+            .rating-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .image-container {
+                width: 100%;
+                max-height: 400px;
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            .image-container img {
+                max-width: 100%;
+                max-height: 400px;
+                object-fit: contain;
+            }
+            .caption-container {
+                width: 100%;
+                padding: 15px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                background-color: #f8f9fa;
+                text-align: center;
+                font-size: 18px;
+                line-height: 1.5;
+            }
+            .rating-buttons {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+            .yes-btn, .no-btn {
+                padding: 12px 40px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 18px;
+                font-weight: bold;
+                transition: all 0.3s ease;
+            }
+            .yes-btn {
+                background-color: #2ecc71;
+                color: white;
+            }
+            .yes-btn:hover {
+                background-color: #27ae60;
+            }
+            .no-btn {
+                background-color: #e74c3c;
+                color: white;
+            }
+            .no-btn:hover {
+                background-color: #c0392b;
+            }
+            .controls {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                margin-top: 20px;
+            }
+            button {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                transition: background-color 0.3s ease;
+            }
+            button:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
+            .next-btn {
+                background-color: #3498db;
+                color: white;
+            }
+            .next-btn:hover:not(:disabled) {
+                background-color: #2980b9;
+            }
+            .prev-btn {
+                background-color: #95a5a6;
+                color: white;
+            }
+            .prev-btn:hover:not(:disabled) {
+                background-color: #7f8c8d;
+            }
+            .load-file {
+                background-color: #3498db;
+                color: white;
+                margin-bottom: 20px;
+            }
+            .load-file:hover {
+                background-color: #2980b9;
+            }
+            .save-results {
+                background-color: #f39c12;
+                color: white;
+            }
+            .save-results:hover:not(:disabled) {
+                background-color: #e67e22;
+            }
+            .progress {
+                margin-top: 15px;
+                font-size: 16px;
+                color: #7f8c8d;
+            }
+            .file-input-container {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .status-message {
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 4px;
+            }
+            .status-message.error {
+                background-color: #fee;
+                color: #e74c3c;
+            }
+            .status-message.success {
+                background-color: #efe;
+                color: #27ae60;
+            }
+            .login-container {
+                background-color: #f8f9fa;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .login-input {
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+                margin-right: 10px;
+                width: 250px;
+            }
+            .login-button {
+                background-color: #3498db;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+            .login-button:hover {
+                background-color: #2980b9;
+            }
+            .user-info {
+                margin-bottom: 15px;
+                font-weight: bold;
+                color: #2c3e50;
+            }
+            .skip-message {
+                background-color: #fcf8e3;
+                padding: 10px;
+                border-radius: 4px;
+                margin: 10px 0;
+                color: #8a6d3b;
+                text-align: center;
+            }
+            .caption-type {
+                font-size: 12px;
+                color: #7f8c8d;
+                margin-top: 5px;
+                text-align: center;
+                font-style: italic;
+            }
+            .question-text {
+                text-align: center;
+                font-size: 18px;
+                margin-bottom: 15px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>VALSE Caption Rating Tool</h1>
+
+        <div class="intro">
+            <p>
+                This tool helps validate captions for the VALSE benchmark dataset by 
+                collecting human ratings on individual captions.
+            </p>
+            <p>Instructions:</p>
+            <ol>
+                <li>Enter your username</li>
+                <li>Load your JSON dataset using the button below</li>
+                <li>
+                    For each image, you will be shown one caption. Rate whether the caption is fitting for the image.
+                </li>
+                <li>
+                    Click "Yes" if the caption accurately describes the image, or "No" if it doesn't
+                </li>
+                <li>
+                    Navigate through all images and save your results when done
+                </li>
+            </ol>
+        </div>
+
+        <!-- Login container -->
+        <div class="login-container" id="loginContainer">
+            <h3>Enter your username to start rating</h3>
+            <div style="display: flex; margin-bottom: 10px;">
+                <input 
+                    type="text" 
+                    id="usernameInput" 
+                    class="login-input" 
+                    placeholder="Enter your username"
+                />
+                <button id="loginButton" class="login-button">Login</button>
+            </div>
+        </div>
+
+        <div id="userInfo" class="user-info" style="display: none;"></div>
+
+        <div class="file-input-container" id="fileInputContainer" style="display: none;">
+            <input
+                type="file"
+                id="jsonFileInput"
+                accept=".json"
+                style="display: none"
+            />
+            <button class="load-file" id="loadFileButton">
+                Load JSON Dataset
+            </button>
+            <div id="statusMessage" class="status-message"></div>
+        </div>
+
+        <div class="rating-container" id="ratingContainer" style="display: none;">
+            <div id="skipMessage" class="skip-message" style="display: none;">
+                You have already rated this image. Moving to the next available image...
+            </div>
+            
+            <div class="image-container">
+                <img
+                    id="currentImage"
+                    src="/api/placeholder/600/400"
+                    alt="Current image"
+                />
+            </div>
+
+            <div class="caption-container" id="captionContainer">
+                Caption will appear here
+            </div>
+
+            <div id="captionTypeIndicator" class="caption-type"></div>
+
+            <div class="question-text">Is this caption fitting for the image?</div>
+
+            <div class="rating-buttons">
+                <button class="yes-btn" id="yesButton">Yes</button>
+                <button class="no-btn" id="noButton">No</button>
+            </div>
+
+            <div class="controls">
+                <button class="prev-btn" id="prevButton">Previous</button>
+                <div class="progress" id="progressIndicator">Image 0 of 0</div>
+                <button class="next-btn" id="nextButton" disabled>Next</button>
+            </div>
+
+            <div class="controls" style="margin-top: 30px">
+                <button class="save-results" id="saveButton" disabled>
+                    Save Results
+                </button>
+            </div>
+        </div>
+
+        <script>
+            // Main application state
+            const state = {
+                dataset: null,
+                datasetKeys: [], // Keys from the dataset object
+                displayOrder: [], // Order in which to display images (can be shuffled)
+                currentIndex: 0,
+                ratings: [], // Store rating decisions for each image
+                captionTypes: [], // Tracks which caption type (normal/foil) is shown for each image
+                username: null, // Username of the current rater
+                skippedImages: 0, // Count of skipped images (already rated by this user)
+                ratedImages: [], // Keys of images already rated
+            };
+
+            // DOM elements
+            const elements = {
+                loginContainer: document.getElementById("loginContainer"),
+                usernameInput: document.getElementById("usernameInput"),
+                loginButton: document.getElementById("loginButton"),
+                userInfo: document.getElementById("userInfo"),
+                fileInputContainer: document.getElementById("fileInputContainer"),
+                fileInput: document.getElementById("jsonFileInput"),
+                loadButton: document.getElementById("loadFileButton"),
+                ratingContainer: document.getElementById("ratingContainer"),
+                currentImage: document.getElementById("currentImage"),
+                captionContainer: document.getElementById("captionContainer"),
+                captionTypeIndicator: document.getElementById("captionTypeIndicator"),
+                yesButton: document.getElementById("yesButton"),
+                noButton: document.getElementById("noButton"),
+                prevButton: document.getElementById("prevButton"),
+                nextButton: document.getElementById("nextButton"),
+                saveButton: document.getElementById("saveButton"),
+                progressIndicator: document.getElementById("progressIndicator"),
+                statusMessage: document.getElementById("statusMessage"),
+                skipMessage: document.getElementById("skipMessage"),
+            };
+
+            // Initialize the application
+            function init() {
+                // Set up login event listener
+                elements.loginButton.addEventListener("click", handleLogin);
+                elements.usernameInput.addEventListener("keyup", (event) => {
+                    if (event.key === "Enter") {
+                        handleLogin();
+                    }
+                });
+                
+                // Set up file-related event listeners
+                elements.loadButton.addEventListener("click", () =>
+                    elements.fileInput.click()
+                );
+                elements.fileInput.addEventListener("change", handleFileUpload);
+                
+                // Set up rating button event listeners
+                elements.yesButton.addEventListener("click", () => rateCaption(true));
+                elements.noButton.addEventListener("click", () => rateCaption(false));
+                
+                // Set up navigation event listeners
+                elements.prevButton.addEventListener("click", goToPrevious);
+                elements.nextButton.addEventListener("click", goToNext);
+                elements.saveButton.addEventListener("click", saveResults);
+            }
+
+            // Handle login
+            function handleLogin() {
+                const username = elements.usernameInput.value.trim();
+                if (!username) {
+                    showStatusMessage("Please enter a valid username", "error");
+                    return;
+                }
+
+                // Store username in state
+                state.username = username;
+
+                // Show user info
+                elements.userInfo.textContent = `Logged in as: ${username}`;
+                elements.userInfo.style.display = "block";
+                
+                // Hide login container
+                elements.loginContainer.style.display = "none";
+                
+                // Show file input and options
+                elements.fileInputContainer.style.display = "block";
+            }
+
+            // Handle JSON file upload
+            function handleFileUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        state.dataset = JSON.parse(e.target.result);
+
+                        // Extract keys from dataset object
+                        state.datasetKeys = Object.keys(state.dataset);
+
+                        // Ensure all items have the rating fields
+                        ensureRatingFields();
+
+                        // Create display order array and shuffle it
+                        state.displayOrder = [...Array(state.datasetKeys.length).keys()];
+                        shuffleArray(state.displayOrder);
+
+                        // Initialize ratings array with nulls (no rating)
+                        state.ratings = new Array(state.datasetKeys.length).fill(null);
+
+                        // Initialize caption types array (randomly decide which caption to show)
+                        state.captionTypes = [];
+                        for (let i = 0; i < state.datasetKeys.length; i++) {
+                            // Randomly decide whether to show normal caption or foil
+                            state.captionTypes.push(Math.random() >= 0.5 ? "caption" : "foil");
+                        }
+
+                        // Find already rated images by this user
+                        findRatedImages();
+
+                        showStatusMessage(
+                            `Dataset loaded successfully! Found ${state.datasetKeys.length} images.`,
+                            "success"
+                        );
+                        elements.ratingContainer.style.display = "flex";
+                        state.currentIndex = 0;
+                        
+                        // Start with the first unrated image
+                        findNextUnratedImage();
+                    } catch (error) {
+                        showStatusMessage(
+                            "Error loading JSON file: " + error.message,
+                            "error"
+                        );
+                    }
+                };
+                reader.onerror = () => {
+                    showStatusMessage("Error reading file", "error");
+                };
+                reader.readAsText(file);
+            }
+
+            // Ensure all items in the dataset have the required rating fields
+            function ensureRatingFields() {
+                for (const key of state.datasetKeys) {
+                    // Add CaptionRatings if it doesn't exist
+                    if (!state.dataset[key].CaptionRatings) {
+                        state.dataset[key].CaptionRatings = {
+                            Positive: 0,
+                            Negative: 0,
+                            RatedBy: []
+                        };
+                    } 
+                    // Ensure RatedBy field exists under CaptionRatings
+                    else if (!state.dataset[key].CaptionRatings.RatedBy) {
+                        state.dataset[key].CaptionRatings.RatedBy = [];
+                    }
+                    
+                    // Add FoilRatings if it doesn't exist
+                    if (!state.dataset[key].FoilRatings) {
+                        state.dataset[key].FoilRatings = {
+                            Positive: 0,
+                            Negative: 0,
+                            RatedBy: []
+                        };
+                    }
+                    // Ensure RatedBy field exists under FoilRatings
+                    else if (!state.dataset[key].FoilRatings.RatedBy) {
+                        state.dataset[key].FoilRatings.RatedBy = [];
+                    }
+                }
+            }
+
+            // Find images already rated by the current user
+            function findRatedImages() {
+                state.ratedImages = [];
+                
+                for (let i = 0; i < state.datasetKeys.length; i++) {
+                    const key = state.datasetKeys[i];
+                    const item = state.dataset[key];
+                    const captionType = state.captionTypes[i];
+                    
+                    // Check if user has already rated this image with the selected caption type
+                    if (captionType === "caption" && 
+                        item.CaptionRatings.RatedBy.includes(state.username)) {
+                        state.ratedImages.push(key);
+                    } else if (captionType === "foil" && 
+                        item.FoilRatings.RatedBy.includes(state.username)) {
+                        state.ratedImages.push(key);
+                    }
+                }
+                
+                // Update user info
+                elements.userInfo.textContent = `Logged in as: ${state.username} | Already rated: ${state.ratedImages.length}/${state.datasetKeys.length} images`;
+            }
+            
+            // Find next unrated image and display it
+            function findNextUnratedImage() {
+                // Hide skip message before checking
+                elements.skipMessage.style.display = "none";
+                
+                if (state.currentIndex >= state.datasetKeys.length) {
+                    // We've gone through all images
+                    showStatusMessage("You have rated all available images!", "success");
+                    return;
+                }
+                
+                // Get the key and check if it's already rated
+                const actualIndex = state.displayOrder[state.currentIndex];
+                const key = state.datasetKeys[actualIndex];
+                const captionType = state.captionTypes[actualIndex];
+                
+                let alreadyRated = false;
+                
+                if (captionType === "caption") {
+                    alreadyRated = state.dataset[key].CaptionRatings.RatedBy.includes(state.username);
+                } else { // foil
+                    alreadyRated = state.dataset[key].FoilRatings.RatedBy.includes(state.username);
+                }
+                
+                if (alreadyRated) {
+                    // This image is already rated by this user with this caption type
+                    elements.skipMessage.style.display = "block";
+                    state.skippedImages++;
+                    
+                    // Auto move to next image after a delay
+                    setTimeout(() => {
+                        goToNext();
+                    }, 1500);
+                } else {
+                    // Image not rated yet, display it
+                    displayCurrentItem();
+                }
+            }
+
+            // Shuffle array in place (Fisher-Yates algorithm)
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // Show status message
+            function showStatusMessage(message, type) {
+                elements.statusMessage.textContent = message;
+                elements.statusMessage.className = "status-message " + type;
+
+                // Clear message after 5 seconds
+                setTimeout(() => {
+                    elements.statusMessage.textContent = "";
+                    elements.statusMessage.className = "status-message";
+                }, 5000);
+            }
+
+            // Display the current image and caption
+            function displayCurrentItem() {
+                if (!state.dataset || state.datasetKeys.length === 0) return;
+
+                // Get the actual key using the display order
+                const actualIndex = state.displayOrder[state.currentIndex];
+                const currentKey = state.datasetKeys[actualIndex];
+                const item = state.dataset[currentKey];
+                const captionType = state.captionTypes[actualIndex];
+
+                // Update the image - use the image_file path
+                const basePath = "temporal-stage/frames/"; // Set this to the root path of your images if needed
+                elements.currentImage.src =
+                    basePath + item.image_file || `/api/placeholder/600/400`;
+                elements.currentImage.alt = `Image ${state.currentIndex + 1}`;
+
+                // Display the selected caption type
+                if (captionType === "caption") {
+                    elements.captionContainer.textContent = item.caption;
+                    // Uncomment the line below if you want to show the caption type (for debugging)
+                    // elements.captionTypeIndicator.textContent = "(Normal caption)";
+                } else {
+                    elements.captionContainer.textContent = item.foil;
+                    // Uncomment the line below if you want to show the caption type (for debugging)
+                    // elements.captionTypeIndicator.textContent = "(Foil caption)";
+                }
+
+                // Reset buttons to default state
+                resetRatingButtons();
+
+                // Apply previous rating if exists
+                const rating = state.ratings[actualIndex];
+                if (rating !== null) {
+                    if (rating === true) {
+                        elements.yesButton.style.opacity = "0.7";
+                        elements.yesButton.style.boxShadow = "0 0 5px #2ecc71";
+                    } else {
+                        elements.noButton.style.opacity = "0.7";
+                        elements.noButton.style.boxShadow = "0 0 5px #e74c3c";
+                    }
+                    elements.nextButton.disabled = false;
+                } else {
+                    elements.nextButton.disabled = true;
+                }
+
+                // Update navigation buttons
+                elements.prevButton.disabled = state.currentIndex === 0;  
+                elements.progressIndicator.textContent = `Image ${
+                    state.currentIndex + 1
+                } of ${state.datasetKeys.length} (${state.ratedImages.length} already rated)`;
+
+                // Enable save button if there are any ratings
+                elements.saveButton.disabled = !state.ratings.some(r => r !== null);
+            }
+
+            // Reset rating buttons to default state
+            function resetRatingButtons() {
+                elements.yesButton.style.opacity = "1";
+                elements.yesButton.style.boxShadow = "none";
+                elements.noButton.style.opacity = "1";
+                elements.noButton.style.boxShadow = "none";
+            }
+
+            // Handle caption rating
+            function rateCaption(isPositive) {
+                // Reset buttons first
+                resetRatingButtons();
+                
+                // Add visual indicator for selected button
+                if (isPositive) {
+                    elements.yesButton.style.opacity = "0.7";
+                    elements.yesButton.style.boxShadow = "0 0 5px #2ecc71";
+                } else {
+                    elements.noButton.style.opacity = "0.7";
+                    elements.noButton.style.boxShadow = "0 0 5px #e74c3c";
+                }
+
+                // Get the actual index using the display order
+                const actualIndex = state.displayOrder[state.currentIndex];
+
+                // Store rating
+                state.ratings[actualIndex] = isPositive;
+
+                // Enable next button
+                elements.nextButton.disabled = false;
+                
+                // Enable save button
+                elements.saveButton.disabled = false;
+            }
+
+            // Go to previous image
+            function goToPrevious() {
+                if (state.currentIndex > 0) {
+                    state.currentIndex--;
+                    findNextUnratedImage();
+                }
+            }
+
+            // Go to next image
+            function goToNext() {
+                if (state.currentIndex < state.datasetKeys.length - 1) {
+                    state.currentIndex++;
+                    findNextUnratedImage();
+                } else {
+                    showStatusMessage("You've reached the end of the dataset!", "success");
+                }
+            }
+
+            // Save results to JSON
+            function saveResults() {
+                // Update the dataset with user ratings
+                let updatedCount = 0;
+                
+                for (let i = 0; i < state.datasetKeys.length; i++) {
+                    const rating = state.ratings[i];
+
+                    // Skip if no rating was made for this image
+                    if (rating === null) continue;
+
+                    const key = state.datasetKeys[i];
+                    const captionType = state.captionTypes[i];
+                    
+                    // Update based on caption type and rating
+                    if (captionType === "caption") {
+                        // Check if user hasn't rated this caption before
+                        if (!state.dataset[key].CaptionRatings.RatedBy.includes(state.username)) {
+                            // Increment the appropriate counter
+                            if (rating === true) {
+                                state.dataset[key].CaptionRatings.Positive++;
+                            } else {
+                                state.dataset[key].CaptionRatings.Negative++;
+                            }
+                            
+                            // Add username to RatedBy list
+                            state.dataset[key].CaptionRatings.RatedBy.push(state.username);
+                            updatedCount++;
+                        }
+                    } else { // foil
+                        // Check if user hasn't rated this foil before
+                        if (!state.dataset[key].FoilRatings.RatedBy.includes(state.username)) {
+                            // Increment the appropriate counter
+                            if (rating === true) {
+                                state.dataset[key].FoilRatings.Positive++;
+                            } else {
+                                state.dataset[key].FoilRatings.Negative++;
+                            }
+                            
+                            // Add username to RatedBy list
+                            state.dataset[key].FoilRatings.RatedBy.push(state.username);
+                            updatedCount++;
+                        }
+                    }
+                }
+
+                // Create blob and download link
+                const resultJson = JSON.stringify(state.dataset, null, 2);
+                const blob = new Blob([resultJson], {
+                    type: "application/json",
+                });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "valse_caption_ratings.json";
+                document.body.appendChild(a);
+                a.click();
+
+                // Clean up
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 0);
+
+                showStatusMessage(
+                    `Results saved successfully! Updated ${updatedCount} caption ratings.`,
+                    "success"
+                );
+                
+                // Update the ratedImages list
+                findRatedImages();
+            }
+
+            // Initialize the application
+            init();
+        </script>
+    </body>
+</html>
