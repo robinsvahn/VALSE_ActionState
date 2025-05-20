@@ -305,6 +305,7 @@
                 displayOrder: [], // Order in which to display images (can be shuffled)
                 currentIndex: 0,
                 selections: [],
+                selectedTypes: [], // Store caption/foil type at time of selection
                 captionOrder: [], // Tracks which option is correct vs foiled for each image
                 username: null, // Username of the current rater
                 skippedImages: 0, // Count of skipped images (already rated by this user)
@@ -444,6 +445,11 @@
 
                         // Initialize selections array with nulls (no selection)
                         state.selections = new Array(
+                            state.datasetKeys.length
+                        ).fill(null);
+
+                        // Initialize selectedTypes array with nulls (no selection type)
+                        state.selectedTypes = new Array(
                             state.datasetKeys.length
                         ).fill(null);
 
@@ -651,6 +657,9 @@
                 // Store selection
                 state.selections[actualIndex] = optionId;
 
+                state.selectedTypes[actualIndex] =
+                    document.getElementById(optionId).dataset.type;
+
                 // Enable next button
                 elements.nextButton.disabled = false;
 
@@ -686,13 +695,12 @@
 
                 for (let i = 0; i < state.datasetKeys.length; i++) {
                     const selection = state.selections[i];
+                    const selectionType = state.selectedTypes[i];
 
                     // Skip if no selection was made for this image
-                    if (selection === null) continue;
+                    if (selection === null || selectionType === null) continue;
 
                     const key = state.datasetKeys[i];
-                    const selectionType =
-                        document.getElementById(selection).dataset.type;
 
                     // Only update if user hasn't rated this image before
                     if (
