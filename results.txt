@@ -21,3 +21,4 @@ temporal_stage sample 2547/2547.
     Caption fits p_c: 51.98,
     FOIL detected p_f: 48.45,
     Pairwise accuracy acc_r: 50.41
+    (auroc x 100):  50.36807045988498
