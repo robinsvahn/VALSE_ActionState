@@ -1,74 +1,31 @@
-# VALSE :dancer:
+# Disclaimer: Forked Repository for VALSE Paper Extension
 
-:dancer: VALSE: A Task-Independent Benchmark for Vision and Language Models Centered on Linguistic Phenomena. https://aclanthology.org/2022.acl-long.567/
+This repository is a **fork** of the original codebase used to produce the results presented in the VALSE (Vector-based Assessment of Linquistic Systematicity and Entailment) paper.
 
-📰 News: Accepted at ACL 2022 Main Conference.
+We have utilized this forked version to test an **additional linguistic phenomenon** not covered in the original VALSE study. Our modifications and new experiments are contained within this fork.
 
-## Papers with Code entries for capturing future results on the benchmark
-* Paper: https://paperswithcode.com/paper/valse-a-task-independent-benchmark-for-vision-1
-* Dataset: https://paperswithcode.com/dataset/valse
-   * We encourage the community to **submit their results** there to keep track of the progress on this benchmark. Disclaimer: Since we often cannot run models produced by the community, we have to trust the results reported by the respective model authors.
+## Locating Our Results
 
-## Data Instructions
-Please find the data in the `data` folder. The dataset is in `json` format and contains the following relevant fields:
-* A reference to the image in the original dataset: `dataset` and `image_file`.
-* The valid sentence, the caption for VALSE: `caption`.
-* The altered caption, the `foil`.
-* The annotator's votes (3 annotators per sample): `mturk`.
-    * The subentry `caption` counts the number of annotators who chose the caption, but/and not the foil, to be the one describing the image.
-    * The subentry `foil` counts how many of the three annotators chose the foil to be (also) describing the image.
-    * For more information, see subsec. 4.4 and App. E of the [paper](https://aclanthology.org/2022.acl-long.567/).
+To find the specific results related to our investigation of the additional linguistic phenomenon, please navigate to the results-folder. There you will find:
 
-:bangbang: Please be aware that the jsons are containing both valid (meaning: validated by annotators) and non-validated samples. In order to work only with the **valid set**, please consider filtering them:
+* Pairwise Accuracy ranking, accuracy, precision, foil precision and AUROC*100 from Lxmert 
+* Perplexity scores from GPT1
+* Perplexity scores from GPT2
 
-> We consider a **valid foil** to mean: at least two out of three annotators identified the caption, but not the foil, as the text which accurately describes the image.
+## Reproducing Our Results
 
-This means that the valid samples of the dataset are the ones where `sample["mturk"]["caption"] >= 2`.
+To reproduce the results from our experiments on the additional linguistic phenomenon, please follow these steps:
 
-Example instance:
-```python
-{
-    "actions_test_0": {
-        "dataset": "SWiG",                        # dataset from where the image and caption originate from
-        "original_split": "test",                 # the split of the original dataset in which the sample belonged to
-        "dataset_idx": "exercising_255.jpg",      # the sample id in the original dataset
-        "linguistic_phenomena": "actions",        # the linguistic phenomenon targeted
-        "image_file": "exercising_255.jpg",       # the image filename (in the original dataset)
-        "caption": "A man exercises his torso.",  # image caption
-        "classes": "man",                         # the word of the caption that was replaced
-        "classes_foil": "torso",                  # the foil word / phrase
-        "mturk": {                                # Amazon Mechanical Turk annotation (validation) results
-            "foil": 0,                            # how many annotators voted that the foil describes the image
-            "caption": 3,                         # how many annotators voted that the caption only (and not the foil) to describe the image
-            "other": 0
-        },
-        "foil": "A torso exercises for a man."    # foil where one word / phrase is exchanged in the original caption such that the foil caption does not describe the image anymore
-    }, ...
-}
-```
+1.  **Prerequisites**: Set up the environment by following the instructions in "environment_minimal_yaml". This setup assumes windows, for other operative systems the commands might be slightly different.
 
-## Images
-For the images, please follow the downloading instructions of the respective original dataset. The provenance of the original images is mentioned in the json files in the field `dataset`.
+2.  **Data Preparation**:
+    * Download the additional dataset from [link](https://dreamdragon.github.io/PennAction/). Locate the frames-folder, and place it inside `data/temporal-stage/".
+  
+3.  **Running the Experiment**:
+    * Run lxmert_valse_eval.py to run test on tthe VLM model.
+    * Run Unimodal_valse_eval.py to run test on unimodal models. To specify which, configure the "which"-variable inside the file.
 
-# Reference
-Please cite our [:dancer: VALSE paper](https://aclanthology.org/2022.acl-long.567/) if you are using this dataset.
+Please refer to the original `README_original.md` for information and instructions on reproducing the original VALSE paper results. Our additions are specifically focused on the new linguistic phenomenon investigated.
 
-```bibtex
-@inproceedings{parcalabescu-etal-2022-valse,
-    title = "{VALSE}: A Task-Independent Benchmark for Vision and Language Models Centered on Linguistic Phenomena",
-    author = "Parcalabescu, Letitia  and
-      Cafagna, Michele  and
-      Muradjan, Lilitta  and
-      Frank, Anette  and
-      Calixto, Iacer  and
-      Gatt, Albert",
-    booktitle = "Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
-    month = may,
-    year = "2022",
-    address = "Dublin, Ireland",
-    publisher = "Association for Computational Linguistics",
-    url = "https://aclanthology.org/2022.acl-long.567",
-    pages = "8253--8280",
-    abstract = "We propose VALSE (Vision And Language Structured Evaluation), a novel benchmark designed for testing general-purpose pretrained vision and language (V{\&}L) models for their visio-linguistic grounding capabilities on specific linguistic phenomena. VALSE offers a suite of six tests covering various linguistic constructs. Solving these requires models to ground linguistic phenomena in the visual modality, allowing more fine-grained evaluations than hitherto possible. We build VALSE using methods that support the construction of valid foils, and report results from evaluating five widely-used V{\&}L models. Our experiments suggest that current models have considerable difficulty addressing most phenomena. Hence, we expect VALSE to serve as an important benchmark to measure future progress of pretrained V{\&}L models from a linguistic perspective, complementing the canonical task-centred V{\&}L evaluations.",
-}
-```
+## Where our calculations come from
+* If you should be curious of how we created the temporal_stage.json file, how we selected the images and annotated them or how we calculated the AUROC value, feel free to check out our "workshed"-repository: [link](https://github.com/robinsvahn/ActionState)
