@@ -46,7 +46,7 @@ def compute_ppl(test_sentence):
     ppl = torch.exp(torch.stack(lls).sum() / i)
     return ppl
 
-which = "gpt2" #sys.argv[1]
+which = "gpt1" #sys.argv[1]
 print(f"Running experiments with {which} unimodal model.")
 model, device, tokenizer, max_length = load_model(which)
 
@@ -102,8 +102,8 @@ for instrument, foils_path in DATA.items():
 
 
     core = foils_path[1].split('/')[-1]
-    os.makedirs(f'{which}_results_json', exist_ok=True)
+    os.makedirs(f'results/{which}_results_json', exist_ok=True)
 
-    with open(f'{which}_results_json/{which}_perplexity_{core}', 'w') as outfile:
+    with open(f'results/{which}_results_json/{which}_perplexity_{core}', 'w') as outfile:
         json.dump(foils_data, outfile, indent=4)
 

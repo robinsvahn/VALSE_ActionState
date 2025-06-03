@@ -105,5 +105,6 @@ for instrument, foil_info in DATA.items():
           )
 
     core = foils_path.split('/')[-1]
-    with open(f'lxmert_results_json/{core}', 'w') as outfile:
+    os.makedirs(f'results/lxmert_results_json', exist_ok=True)
+    with open(f'results/lxmert_results_json/{core}', 'w') as outfile:
         json.dump(foils_data, outfile, indent=4)

@@ -16,6 +16,7 @@ dependencies:
     - pyyaml
     # - transformers  # Commented out to avoid the large installation
     # - cudatoolkit  # Only needed if we're using GPU support (we can install it later if required)
+
 # Windows terminal commands to run project
 # conda env create -f environment_minimal.yaml
 # conda activate actionstage

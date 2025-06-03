@@ -175,4 +175,4 @@ cython_debug/
 
 data/plurals/*
 
-data/temporal-stage/*
+data/temporal-stage/frames/*
