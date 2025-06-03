@@ -26,3 +26,6 @@ To reproduce the results from our experiments on the additional linguistic pheno
     * Run Unimodal_valse_eval.py to run test on unimodal models. To specify which, configure the "which"-variable inside the file.
 
 Please refer to the original `README.md` for instructions on reproducing the original VALSE paper results. Our additions are specifically focused on the new linguistic phenomenon investigated.
+
+## Where our calculations come from
+* If you should be curious of how we created the temporal_stage.json file, how we selected the images and annotated them or how we calculated the AUROC value, feel free to check out our "workshed"-repository: [link](https://github.com/robinsvahn/ActionState)
