@@ -19,7 +19,7 @@ To reproduce the results from our experiments on the additional linguistic pheno
 1.  **Prerequisites**: Set up the environment by following the instructions in "environment_minimal_yaml". This setup assumes windows, for other operative systems the commands might be slightly different.
 
 2.  **Data Preparation**:
-    * Download the additional dataset from [link](https://dreamdragon.github.io/PennAction/). Locate the frames-folder, and place it inside `data/temporal-stage/".
+    * Download the additional dataset from [link](https://dreamdragon.github.io/PennAction/). Locate the frames-folder, and place it inside `data/temporal-stage/". The temporal-stage-folder is not included in this repository so this needs to be created.
   
 3.  **Running the Experiment**:
     * Run lxmert_valse_eval.py to run test on tthe VLM model.
